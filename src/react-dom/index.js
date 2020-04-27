@@ -19,9 +19,20 @@ export default {
   ]
 }
  */
-
+/**
+ * 渲染虚拟DOM到目标节点中
+ * @param {object} vnode 虚拟DOM对象
+ * @param {Element} target DOM节点
+ */
 function render(vnode, target) {
-  if (!vnode) return
+  target.appendChild(renderVnode2Dom(vnode))
+}
+
+
+function renderVnode2Dom(vnode) {
+  if (!vnode) {
+    vnode = ''
+  }
 
   let dom
   if (typeof vnode === 'string') {
@@ -40,10 +51,14 @@ function render(vnode, target) {
       children.forEach(child => render(child, dom))
     }
   }
-
-  target.appendChild(dom)
+  return dom
 }
 
+/**
+ * 设置DOM属性
+ * @param {Element} dom 要设置属性的DOM
+ * @param {object}} attrs 属性集合
+ */
 function setAttribute(dom, attrs) {
   for (let key in attrs) {
     const attr = attrs[key]
@@ -55,7 +70,7 @@ function setAttribute(dom, attrs) {
       // 处理样式
       if (!attr || typeof attr === 'string') {
         dom.style.cssText = attr
-      } else if (value && typeof value === 'object') {
+      } else if (attr && typeof attr === 'object') {
         // 样式是对象形式
         for (const k in attr) {
           let styleValue = attr[k]
