@@ -1,3 +1,5 @@
+import { Component } from '../react'
+
 export default {
   render,
 }
@@ -41,17 +43,42 @@ function renderVnode2Dom(vnode) {
   } else {
     // 虚拟DOM对象
     const { tag, props, children } = vnode
-    dom = document.createElement(tag)
-    if (props) {
-      setAttribute(dom, props)
+
+    if (typeof tag === 'function') {
+      // 类组件或函数组件
+      if (tag.prototype.render) {
+        // 类组件
+        dom = handleClassComp(tag, props)
+      } else {
+        // 函数组件
+        dom = handleFunComp(tag, props)
+      }
+    } else {
+      // 原生dom节点
+      dom = document.createElement(tag)
+      if (props) {
+        setAttribute(dom, props)
+      }
+
+      // 递归渲染子节点
+      if (children) {
+        children.forEach(child => render(child, dom))
+      }
     }
 
-    // 递归渲染子节点
-    if (children) {
-      children.forEach(child => render(child, dom))
-    }
+
   }
   return dom
+}
+
+function handleClassComp(ClassComp, props) {
+  const inst = new ClassComp(props)
+  const vnode = inst.render()
+  return renderVnode2Dom(vnode)
+}
+
+function handleFunComp(funComp, props) {
+  return renderVnode2Dom(funComp(props))
 }
 
 /**

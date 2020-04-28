@@ -1,7 +1,10 @@
 {
   "plugins": [
-    ["@babel/plugin-transform-react-jsx", {
-      "pragma": "React.createElement"  // jsx调用的语法，默认值，可以不写
-    }]
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "pragma": "React.createElement" // jsx调用的语法，默认值，可以不写
+      }
+    ]
   ]
 }

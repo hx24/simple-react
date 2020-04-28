@@ -1,5 +1,5 @@
 export default {
-  createElement
+  createElement,
 }
 
 function createElement(tag, props, ...children) {
@@ -11,5 +11,11 @@ class VDOM {
     this.tag = tag
     this.props = props
     this.children = children
+  }
+}
+
+export class Component {
+  constructor(props) {
+    this.props = props
   }
 }

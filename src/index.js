@@ -1,12 +1,48 @@
-import React from './react'
+import React, { Component } from './react'
 import ReactDOM from './react-dom'
 
 const el = (
   <div className='title' title='hello' style={{ fontWeight: 'bold' }}>
-    hello <span style="color: red" onClick={() => { alert('hello') }}>react</span>
+    hello{' '}
+    <span
+      style='color: red'
+      onClick={() => {
+        alert('hello')
+      }}
+    >
+      react
+    </span>
   </div>
 )
 
-console.log('el', el)
+class ClassComp extends Component {
+  render() {
+    const { name } = this.props
+    return (
+      <div class='classComp'>
+        <p>hi, {name}</p>
+        this is a <b>class</b> component
+      </div>
+    )
+  }
+}
 
-ReactDOM.render(el, document.getElementById('root'))
+
+function FunComp(props) {
+  return (
+    <div>
+      <i>hello, <span style={{ color: 'red' }}>{props.name}</span></i>
+      <h1>this is function component</h1>
+    </div>
+  )
+}
+
+const show = (
+  <div>
+    {el}
+    <ClassComp name={'hx'} />
+    <FunComp name={'hx'} />
+  </div>
+)
+
+ReactDOM.render(show, document.getElementById('root'))
