@@ -1,5 +1,8 @@
-export default {
+import Component from './component'
+
+const React = {
   createElement,
+  Component
 }
 
 function createElement(tag, props, ...children) {
@@ -14,8 +17,10 @@ class VDOM {
   }
 }
 
-export class Component {
-  constructor(props) {
-    this.props = props
-  }
+console.log('React', React)
+
+export default React
+
+export {
+  Component
 }
