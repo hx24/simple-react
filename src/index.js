@@ -1,5 +1,7 @@
 import React, { Component } from './react'
 import ReactDOM from './react-dom'
+import Counter from './components/Counter'
+
 
 const el = (
   <div className='title' title='hello' style={{ fontWeight: 'bold' }}>
@@ -39,10 +41,13 @@ function FunComp(props) {
 
 const show = (
   <div>
-    {el}
+    {/* {el}
     <ClassComp name={'hx'} />
-    <FunComp name={'hx'} />
+    <FunComp name={'hx'} /> */}
+    <Counter />
   </div>
 )
+
+React.createElement()
 
 ReactDOM.render(show, document.getElementById('root'))

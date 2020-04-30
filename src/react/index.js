@@ -15,9 +15,22 @@ class VDOM {
     this.props = props
     this.children = children
   }
-}
 
-console.log('React', React)
+  componentWillMount() {
+  }
+
+  componentWillReceiveProps() {
+  }
+
+  componentWillUpdate() {
+  }
+
+  componentDidUpdate() {
+  }
+
+  componentWillUnmount() {
+  }
+}
 
 export default React
 

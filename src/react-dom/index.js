@@ -30,13 +30,17 @@ function render(vnode, target) {
   target.appendChild(renderVnode2Dom(vnode))
 }
 
-
 function renderVnode2Dom(vnode) {
   if (!vnode) {
     vnode = ''
   }
 
   let dom
+
+  if (typeof vnode === 'number') {
+    vnode = String(vnode)
+  }
+
   if (typeof vnode === 'string') {
     // 字符串节点
     dom = document.createTextNode(vnode)
@@ -62,19 +66,62 @@ function renderVnode2Dom(vnode) {
 
       // 递归渲染子节点
       if (children) {
-        children.forEach(child => render(child, dom))
+        children.forEach((child) => render(child, dom))
       }
     }
-
-
   }
   return dom
 }
 
 function handleClassComp(ClassComp, props) {
-  const inst = new ClassComp(props)
+  // 创建组件实例
+  const inst = createClassComp(ClassComp, props)
   const vnode = inst.render()
-  return renderVnode2Dom(vnode)
+  inst.dom = renderVnode2Dom(vnode)
+
+  inst.componentDidMount() // TODO  存疑 此时DOM渲染创建出来了，但是并没有插入到页面
+  return inst.dom
+}
+
+/**
+ * 创建类组件实例
+ * @param {Component} ClassComp 类
+ * @param {object} props 属性
+ */
+function createClassComp(ClassComp, props) {
+  const inst = new ClassComp(props)
+  inst.componentWillMount()
+  return inst
+}
+
+/**
+ *  更新组件
+ * @param {Component} classCompInst 类组件实例
+ * @param {object} nextState 新的state
+ * @param {object} [props] 属性 可选  传了则更新属性
+ */
+export function updateClassComp(classCompInst, nextState = {}, props) {
+  const prevState = classCompInst.state
+  const prevProps = classCompInst.props
+  classCompInst.componentWillUpdate(props || classCompInst.props, nextState)
+
+  classCompInst.state = nextState
+  if (props) {
+    updateClassCompProps(classCompInst, props)
+  }
+  const vnode = classCompInst.render()
+  const dom = renderVnode2Dom(vnode)
+  classCompInst.dom.parentNode.replaceChild(dom, classCompInst.dom) // TODO  暂时不做diff，直接替换整个dom
+  classCompInst.componentDidUpdate(prevProps, prevState)
+  classCompInst.dom = dom
+}
+
+/**
+ * 更新组件props
+ */
+function updateClassCompProps(classCompInst, props) {
+  classCompInst.componentWillReceiveProps(props)
+  classCompInst.props = props
 }
 
 function handleFunComp(funComp, props) {
